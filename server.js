@@ -1,5 +1,7 @@
+const morgan = require("morgan");
 const express = require("express");
 const { v4: uuidV4 } = require("uuid");
+const port = process.env.PORT || 3000;
 
 const app = express();
 
@@ -10,12 +12,15 @@ app.set("view engine", "ejs");
 
 app.use(express.static("public"));
 
+app.use(morgan("tiny"));
+
 app.get("/", (req, res) => {
   res.redirect(`/${uuidV4()}`);
 });
 
 app.get("/:room", (req, res) => {
   res.render("room", { roomId: req.params.room });
+  res.status(200);
 });
 
 io.on("connection", (socket) => {
@@ -25,4 +30,4 @@ io.on("connection", (socket) => {
   });
 });
 
-server.listen(5000);
+server.listen(port, () => console.log(`Server up and listening to ${port}`));
