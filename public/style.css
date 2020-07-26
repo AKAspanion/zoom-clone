@@ -97,3 +97,28 @@ video {
   left: calc(50% + 48px);
   transform: translate3d(-50%, 0, 0);
 }
+
+.info-text {
+  left: 36px;
+  bottom: 72px;
+  display: none;
+  padding: 12px;
+  font-size: 14px;
+  max-width: 250px;
+  position: absolute;
+  background: white;
+  border: 1px solid rgba(0, 0, 0, 0.6);
+}
+
+.info-icon {
+  left: 36px;
+  bottom: 36px;
+  cursor: pointer;
+  padding: 0px 6px;
+  position: absolute;
+  color: rgba(26, 86, 214, 0.9);
+  border: 1px solid rgba(26, 86, 214, 0.9);
+}
+.info-icon:hover + .info-text {
+  display: block;
+}
