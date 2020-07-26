@@ -119,8 +119,8 @@ video {
   left: 36px;
   bottom: 36px;
   cursor: pointer;
+  position: fixed;
   padding: 0px 6px;
-  position: absolute;
   color: rgba(26, 86, 214, 0.9);
   border: 1px solid rgba(26, 86, 214, 0.9);
 }
