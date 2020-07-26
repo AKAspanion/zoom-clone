@@ -3,7 +3,7 @@ const myName = prompt("Please enter your name");
 // show loading state
 const loading = document.createElement("div");
 const spin = document.createElement("div");
-loading.classList.add("loading");
+loading.setAttribute("class", "d-flex loading");
 spin.classList.add("loading_spinner");
 
 loading.appendChild(spin);
@@ -41,6 +41,8 @@ peer.on("open", (id) => {
   navigator.mediaDevices
     .getUserMedia(mediaConfig)
     .then((stream) => {
+      addClickListeners(stream);
+
       addVideoStream(video, stream, id, myName);
 
       peer.on("call", (call) => {
@@ -110,6 +112,27 @@ function addVideoStream(video, stream, id, name) {
     if (node.children && node.children.length < 2) {
       node.remove();
     }
+  });
+}
+
+function addClickListeners(stream) {
+  const pause = document.getElementById("pause-video");
+  const mute = document.getElementById("mute-video");
+  pause.addEventListener("click", () => {
+    stream.getTracks().forEach((t) => {
+      if (t.kind === "video") {
+        t.enabled = !t.enabled;
+        pause.innerHTML = t.enabled ? "🐵" : "🙈";
+      }
+    });
+  });
+  mute.addEventListener("click", () => {
+    stream.getTracks().forEach((t) => {
+      if (t.kind === "audio") {
+        t.enabled = !t.enabled;
+        mute.innerHTML = t.enabled ? "🔊" : "🔈";
+      }
+    });
   });
 }
 
