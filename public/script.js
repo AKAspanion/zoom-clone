@@ -1,5 +1,14 @@
 const myName = prompt("Please enter your name");
 
+// show loading state
+const loading = document.createElement("div");
+const spin = document.createElement("div");
+loading.classList.add("loading");
+spin.classList.add("loading_spinner");
+
+loading.appendChild(spin);
+document.body.appendChild(loading);
+
 const socket = io("/");
 const peer = new Peer(undefined, {
   secure: true,
@@ -10,6 +19,11 @@ const peer = new Peer(undefined, {
 
 const peers = {};
 const videoGrid = document.getElementById("video-grid");
+const videoText = document.createElement("div");
+const videoItem = document.createElement("div");
+videoItem.classList.add("video__item");
+videoText.classList.add("video__name");
+videoItem.append(videoText);
 
 const video = document.createElement("video");
 video.muted = true;
@@ -20,23 +34,31 @@ const mediaConfig = {
 };
 
 peer.on("open", (id) => {
+  if (loading) loading.remove();
+
   socket.emit("join-room", ROOM_ID, { id, name: myName });
+
   navigator.mediaDevices
     .getUserMedia(mediaConfig)
     .then((stream) => {
-      addVideoStream(video, stream, id);
+      addVideoStream(video, stream, id, myName);
 
       peer.on("call", (call) => {
         call.answer(stream);
 
         const video = document.createElement("video");
         call.on("stream", (userStream) => {
-          addVideoStream(video, userStream, call.peer);
+          const userId = call.peer;
+          const userName = call.metadata.name;
+
+          log(`User connected - ID: ${userId}, Name: ${userName}`);
+          addVideoStream(video, userStream, userId, userName);
         });
       });
 
-      socket.on("user-connected", (userData) => {
-        connectToNewUser(userData, stream);
+      socket.on("user-connected", ({ id, name }) => {
+        log(`User connected - ID: ${id}, Name: ${name}`);
+        connectToNewUser({ id, name }, stream);
       });
     })
     .catch((err) => {
@@ -44,19 +66,23 @@ peer.on("open", (id) => {
     });
 });
 
-socket.on("user-disconnected", ({ id }) => {
+socket.on("user-disconnected", ({ id, name }) => {
+  log(`User disconnected - ID: ${id}, Name: ${name}`);
+
   const video = document.getElementById(id);
-  if (video) video.remove();
+  if (video) {
+    video.parentElement.remove();
+  }
 
   if (peers[id]) peers[id].close();
 });
 
-function connectToNewUser({ id }, stream) {
+function connectToNewUser({ id, name }, stream) {
   const call = peer.call(id, stream, { metadata: { name: myName } });
 
   const video = document.createElement("video");
   call.on("stream", (userStream) => {
-    addVideoStream(video, userStream, id);
+    addVideoStream(video, userStream, id, name);
   });
   call.on("close", () => {
     video.remove();
@@ -65,11 +91,28 @@ function connectToNewUser({ id }, stream) {
   peers[id] = call;
 }
 
-function addVideoStream(video, stream, id) {
+function addVideoStream(video, stream, id, name) {
   video.srcObject = stream;
   video.addEventListener("loadedmetadata", () => {
     video.play();
   });
   video.setAttribute("id", id);
-  videoGrid.append(video);
+
+  const clonedItem = videoItem.cloneNode(true);
+  clonedItem.children[0].innerHTML = name;
+  clonedItem.append(video);
+
+  videoGrid.append(clonedItem);
+
+  // weird error cleanup
+  const nodes = document.querySelectorAll(".video__item") || [];
+  nodes.forEach((node) => {
+    if (node.children && node.children.length < 2) {
+      node.remove();
+    }
+  });
+}
+
+function log(text) {
+  console.info(text);
 }
