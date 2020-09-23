@@ -13,5 +13,3 @@ Go to the production server [here](https://spanion-video-chat.herokuapp.com/).
 Enter your name and a room is generated instantly.
 
 Copy and share the complete url to invite other people in the room.
-
-P.S. Still work in progress.
