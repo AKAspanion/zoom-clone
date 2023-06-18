@@ -9,12 +9,19 @@ spin.classList.add("loading_spinner");
 loading.appendChild(spin);
 document.body.appendChild(loading);
 
+let secure = true;
+const host = PEER_HOST;
+const port = PEER_PORT;
+
+if (host === "/") {
+  secure = false;
+}
+
 const socket = io("/");
 const peer = new Peer(undefined, {
-  secure: true,
-  host: "spanion-video-chat-peer.onrender.com",
-  // host: "/",
-  // port: "3001",
+  secure,
+  host,
+  port,
 });
 
 const peers = {};
@@ -33,14 +40,40 @@ const mediaConfig = {
   audio: true,
 };
 
+function showError(msg) {
+  const errorBox = document.createElement("div");
+  errorBox.innerHTML = msg;
+  errorBox.id = "error-message";
+  document.body.innerHTML = "";
+  document.body.appendChild(errorBox);
+}
+
 peer.on("open", (id) => {
   if (loading) loading.remove();
+
+  if (!myName) {
+    const msg =
+      "You entered an invalid name, please refresh browser to continue";
+    alert(msg);
+    showError(msg);
+    window.close();
+    return;
+  }
 
   socket.emit("join-room", ROOM_ID, { id, name: myName });
 
   navigator.mediaDevices
     .getUserMedia(mediaConfig)
     .then((stream) => {
+      const permission = localStorage.getItem("permission");
+      if (permission !== "accepted") {
+        showError(
+          "You provided permission for the first time, Please refresh the page to contnue."
+        );
+        localStorage.setItem("permission", "accepted");
+        return;
+      }
+
       addClickListeners(stream);
 
       addVideoStream(video, stream, id, myName);
@@ -64,7 +97,8 @@ peer.on("open", (id) => {
       });
     })
     .catch((err) => {
-      document.write(err);
+      showError(err);
+      localStorage.setItem("permission", "denied");
     });
 });
 
