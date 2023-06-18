@@ -1,4 +1,4 @@
-# [Video Chat Room](https://spanion-video-chat.herokuapp.com/)
+# [Video Chat Room](https://spanion-video-chat.onrender.com/)
 
 A fun open, private, and multiple user chat room inspired by zoom using WebRTC.
 
@@ -8,7 +8,7 @@ A simple project built in few hours using [express](https://expressjs.com/), [so
 
 ## Usage
 
-Go to the production server [here](https://spanion-video-chat.herokuapp.com/).
+Go to the production server [here](https://spanion-video-chat.onrender.com/).
 
 Enter your name and a room is generated instantly.
 
