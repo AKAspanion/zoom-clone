@@ -16,6 +16,7 @@
     "peer": "^1.0.0"
   },
   "devDependencies": {
+    "@types/node": "^20.3.1",
     "nodemon": "^2.0.22"
   }
 }
