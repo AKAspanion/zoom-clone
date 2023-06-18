@@ -6,7 +6,9 @@ app.enable("trust proxy");
 
 const PORT = process.env.PORT || 9000;
 const server = app.listen(PORT, () => {
-  console.log(`Peer listening on port ${PORT}`);
+  console.log(
+    `Peer listening to ${PORT}. For developemnt use http://localhost:${PORT}`
+  );
 });
 
 const peerServer = ExpressPeerServer(server, {

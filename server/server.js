@@ -1,3 +1,4 @@
+require("dotenv").config();
 const morgan = require("morgan");
 const express = require("express");
 const { v4: uuidV4 } = require("uuid");
@@ -34,4 +35,8 @@ io.on("connection", (socket) => {
   });
 });
 
-server.listen(port, () => console.log(`Server up and listening to ${port}`));
+server.listen(port, () => {
+  console.log(
+    `Server listening to ${port}. For developemnt use http://localhost:${port}`
+  );
+});
