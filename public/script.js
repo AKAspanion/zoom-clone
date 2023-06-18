@@ -11,9 +11,10 @@ document.body.appendChild(loading);
 
 const socket = io("/");
 const peer = new Peer(undefined, {
-  secure: false,
-  host: "/",
-  port: "9000",
+  secure: true,
+  host: "spanion-video-chat-peer.onrender.com",
+  // host: "/",
+  // port: "3001",
 });
 
 const peers = {};
