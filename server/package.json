@@ -1,33 +1,32 @@
 {
-  "name": "zoom-clone",
+  "name": "server",
   "version": "1.0.0",
-  "description": "📺 A fun open, private, and multiple user chat room inspired by zoom using WebRTC",
-  "workspaces": [
-    "peer",
-    "server"
-  ],
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "start": "npx lerna run start",
-    "dev": "npx lerna run dev"
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "dev:peer": "cd peer && npm run dev",
+    "start:peer": "cd peer && npm run start"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/AKAspanion/zoom-clone.git"
   },
-  "keywords": [
-    "zoom",
-    "video",
-    "video-call",
-    "video-chat"
-  ],
   "author": "Ankit Kumar Pandit <panditankit1995@gmail.com> (https://akaspanion.github.io/)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/AKAspanion/zoom-clone/issues"
   },
   "homepage": "https://github.com/AKAspanion/zoom-clone#readme",
-  "dependencies": {},
+  "dependencies": {
+    "ejs": "^3.1.7",
+    "express": "^4.18.2",
+    "morgan": "^1.10.0",
+    "socket.io": "^2.3.0",
+    "uuid": "^8.2.0"
+  },
   "devDependencies": {
-    "lerna": "^7.0.2"
+    "nodemon": "^2.0.20"
   }
 }
